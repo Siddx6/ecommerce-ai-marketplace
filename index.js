@@ -2,10 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import "./utils/loadEnv.js";
 import authRoutes from "./routes/authRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 // CORS middleware
 app.use((req, res, next) => {

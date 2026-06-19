@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema(
       enum: ["buyer", "seller", "admin"],
       default: "buyer",
     },
+    sellerProfile: {
+      storeName: { type: String, trim: true },
+      businessDescription: { type: String, trim: true },
+      approved: { type: Boolean, default: false },
+    },
   },
   { timestamps: true }
 );
