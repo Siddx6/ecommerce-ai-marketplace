@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 import "./utils/loadEnv.js";
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/products", productRoutes);
 
 // CORS middleware
 app.use((req, res, next) => {
