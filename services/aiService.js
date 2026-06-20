@@ -250,3 +250,34 @@ Return ONLY the message text, no quotes, no JSON, no explanation.`;
     return null;
   }
 };
+
+export const generateAnalyticsSummary = async (stats) => {
+  const prompt = `Here is raw analytics data for an eCommerce platform/seller:
+
+${JSON.stringify(stats, null, 2)}
+
+Write a short, plain-English summary (2-3 sentences max) highlighting the most notable insight — e.g., a top-performing category, a standout product, or overall sales health. Be specific and reference actual numbers/names from the data. Don't invent trends the data doesn't support (we don't have historical time-series data, so don't claim something is "trending up" or "down" over time — just describe the current snapshot).
+
+Return ONLY the summary text, no markdown, no JSON, no explanation.`;
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API returned status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const summary = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+    return summary;
+  } catch (err) {
+    console.log("Analytics summary generation failed:", err.message);
+    return null;
+  }
+};
