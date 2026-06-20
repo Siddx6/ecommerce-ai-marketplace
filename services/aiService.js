@@ -252,7 +252,9 @@ Return ONLY the message text, no quotes, no JSON, no explanation.`;
 };
 
 export const generateAnalyticsSummary = async (stats) => {
-  const prompt = `Here is raw analytics data for an eCommerce platform/seller:
+  const prompt = `All monetary values below are in Indian Rupees (INR). Always write them with a ₹ prefix (e.g. ₹2499), never $ or any other currency symbol.
+
+Here is raw analytics data for an eCommerce platform/seller:
 
 ${JSON.stringify(stats, null, 2)}
 

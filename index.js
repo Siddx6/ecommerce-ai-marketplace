@@ -17,6 +17,19 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
+
+// CORS middleware — MUST come before routes, or responses never get the header
+app.use((req, res, next) => {
+  const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/analytics", analyticsRoutes);
@@ -30,18 +43,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/insights", insightsRoutes);
-
-// CORS middleware
-app.use((req, res, next) => {
-  const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
-  res.header("Access-Control-Allow-Origin", allowedOrigin);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
 
 // MongoDB connect
 mongoose
