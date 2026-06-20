@@ -84,3 +84,85 @@ ${viewingProduct ? `\nThe buyer is currently viewing this specific product:\n${J
     return "Sorry, I'm having trouble responding right now. Please try again in a moment.";
   }
 };
+
+export const generateProductCopy = async ({ roughTitle, category, keyFeatures }) => {
+  const prompt = `Write professional eCommerce product copy for this listing.
+
+Rough input from the seller:
+- Product: "${roughTitle}"
+- Category: "${category}"
+- Key features/notes: "${keyFeatures || "none provided"}"
+
+Return ONLY a raw JSON object (no markdown, no explanation) with these exact fields:
+{
+  "title": "a polished, concise product title (max 70 characters)",
+  "description": "a compelling 2-4 sentence product description highlighting benefits, written for online shoppers"
+}`;
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API returned status ${response.status}`);
+    }
+
+    const data = await response.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    text = text.replace(/```json|```/g, "").trim();
+
+    return JSON.parse(text);
+  } catch (err) {
+    console.log("Product copy generation failed:", err.message);
+    return { title: roughTitle, description: keyFeatures || "" };
+  }
+};
+
+export const suggestCategory = async ({ title, description, existingCategories }) => {
+  const prompt = `Suggest a category and subcategory for this product listing.
+
+Product title: "${title}"
+Product description: "${description}"
+
+Existing categories/subcategories already used on this marketplace:
+${JSON.stringify(existingCategories)}
+
+Rules:
+- Prefer reusing an existing category/subCategory if it's a good fit, to keep the catalog organized.
+- Only suggest a brand new category if none of the existing ones reasonably fit.
+
+Return ONLY a raw JSON object (no markdown, no explanation):
+{
+  "category": "string",
+  "subCategory": "string",
+  "isNewCategory": true or false
+}`;
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API returned status ${response.status}`);
+    }
+
+    const data = await response.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    text = text.replace(/```json|```/g, "").trim();
+
+    return JSON.parse(text);
+  } catch (err) {
+    console.log("Category suggestion failed:", err.message);
+    return { category: "Uncategorized", subCategory: "", isNewCategory: true };
+  }
+};
