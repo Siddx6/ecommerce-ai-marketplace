@@ -166,3 +166,48 @@ Return ONLY a raw JSON object (no markdown, no explanation):
     return { category: "Uncategorized", subCategory: "", isNewCategory: true };
   }
 };
+
+export const summarizeReviews = async (reviews) => {
+  if (!reviews || reviews.length === 0) {
+    return { pros: [], cons: [] };
+  }
+
+  const reviewText = reviews
+    .map((r, i) => `Review ${i + 1} (rating ${r.rating}/5): "${r.comment || "(no comment)"}"`)
+    .join("\n");
+
+  const prompt = `Summarize these product reviews into quick pros and cons for a shopper skimming a product page.
+
+${reviewText}
+
+Return ONLY a raw JSON object (no markdown, no explanation):
+{
+  "pros": ["short phrase", "short phrase"],
+  "cons": ["short phrase", "short phrase"]
+}
+
+Keep each phrase under 8 words. Maximum 4 pros and 4 cons. Only include cons if reviews actually mention downsides — don't invent any.`;
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API returned status ${response.status}`);
+    }
+
+    const data = await response.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    text = text.replace(/```json|```/g, "").trim();
+
+    return JSON.parse(text);
+  } catch (err) {
+    console.log("Review summarization failed:", err.message);
+    return { pros: [], cons: [] };
+  }
+};
