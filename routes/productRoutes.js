@@ -5,12 +5,20 @@ import {
   deleteProduct,
   getAllProducts,
   getProductById,
+  searchProducts,
+  autocompleteProducts,
+  getAvailableFilters,
+  smartSearchProducts,
 } from "../controllers/productController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // Public browsing routes
+router.get("/search", searchProducts);
+router.get("/autocomplete", autocompleteProducts);
+router.get("/filters", getAvailableFilters);
+router.get("/smart-search", smartSearchProducts);
 router.get("/", getAllProducts);
 router.get("/:productId", getProductById);
 
