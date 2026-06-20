@@ -6,11 +6,13 @@ import adminRoutes from "./routes/adminRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import recommendationRoutes from "./routes/recommendationRoutes.js";
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/products", productRoutes);
