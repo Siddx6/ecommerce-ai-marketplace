@@ -10,6 +10,9 @@ import recommendationRoutes from "./routes/recommendationRoutes.js";
 import assistantRoutes from "./routes/assistantRoutes.js";
 import sellerToolsRoutes from "./routes/sellerToolsRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+import insightsRoutes from "./routes/insightsRoutes.js";
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
@@ -22,7 +25,9 @@ app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/products", productRoutes);
-
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/insights", insightsRoutes);
 // CORS middleware
 app.use((req, res, next) => {
   const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";

@@ -1,6 +1,7 @@
 import Product from "../models/Product.js";
 import User from "../models/User.js";
 import { parseSearchIntent } from "../services/aiService.js";
+import { checkAndNotifyWishlist } from "../services/notificationService.js";
 
 export const createProduct = async (req, res) => {
   try {
@@ -49,6 +50,9 @@ export const updateProduct = async (req, res) => {
       return res.status(403).json({ message: "You can only edit your own listings" });
     }
 
+    const previousStock = product.stock;
+    const previousPrice = product.price;
+
     const allowedFields = ["title", "description", "price", "stock", "category", "subCategory", "images", "isActive"];
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
@@ -57,6 +61,8 @@ export const updateProduct = async (req, res) => {
     });
 
     await product.save();
+    await checkAndNotifyWishlist(product, previousStock, previousPrice);
+
     res.status(200).json({ message: "Product updated", product });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

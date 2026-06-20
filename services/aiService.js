@@ -211,3 +211,42 @@ Keep each phrase under 8 words. Maximum 4 pros and 4 cons. Only include cons if 
     return { pros: [], cons: [] };
   }
 };
+
+export const generateWishlistNudge = async (wishlistItems) => {
+  if (!wishlistItems || wishlistItems.length === 0) {
+    return null;
+  }
+
+  const itemsText = wishlistItems
+    .map((p) => `- ${p.title}: ₹${p.price}, ${p.stock} in stock`)
+    .join("\n");
+
+  const prompt = `A buyer has these items saved in their wishlist:
+
+${itemsText}
+
+Write ONE short, friendly nudge message (max 25 words) encouraging them to complete their purchase. Mention a specific item by name. If stock is low (under 10), you can mention urgency. Don't be pushy or use excessive exclamation marks.
+
+Return ONLY the message text, no quotes, no JSON, no explanation.`;
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API returned status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const message = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+    return message;
+  } catch (err) {
+    console.log("Wishlist nudge generation failed:", err.message);
+    return null;
+  }
+};
