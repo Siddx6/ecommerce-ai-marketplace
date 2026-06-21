@@ -17,6 +17,12 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [actionMessage, setActionMessage] = useState("");
 
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewError, setReviewError] = useState("");
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
@@ -46,6 +52,28 @@ function ProductDetail() {
     await apiClient.post("/wishlist", { productId });
     setActionMessage("Added to wishlist!");
     setTimeout(() => setActionMessage(""), 2000);
+  };
+
+  const submitReview = async (e) => {
+    e.preventDefault();
+    setReviewError("");
+    setReviewSubmitting(true);
+
+    try {
+      await apiClient.post("/reviews", { productId, rating: reviewRating, comment: reviewComment });
+      setReviewSubmitted(true);
+      setReviewComment("");
+      const [reviewsRes, summaryRes] = await Promise.all([
+        apiClient.get(`/reviews/product/${productId}`),
+        apiClient.get(`/reviews/product/${productId}/summary`),
+      ]);
+      setReviews(reviewsRes.data);
+      setReviewSummary(summaryRes.data);
+    } catch (err) {
+      setReviewError(err.response?.data?.message || "Failed to submit review");
+    } finally {
+      setReviewSubmitting(false);
+    }
   };
 
   if (loading) return <p className="text-slate-400 p-6">Loading...</p>;
@@ -129,6 +157,52 @@ function ProductDetail() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {user && (
+        <div className="bg-slate-800 rounded-xl p-5">
+          <h3 className="text-white font-semibold mb-3">Write a Review</h3>
+
+          {reviewSubmitted ? (
+            <p className="text-green-400 text-sm">Thanks for your review!</p>
+          ) : (
+            <form onSubmit={submitReview} className="space-y-3">
+              {reviewError && (
+                <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-3 py-2">{reviewError}</div>
+              )}
+
+              <div className="flex items-center gap-1">
+                <span className="text-sm text-slate-300 mr-2">Rating:</span>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setReviewRating(star)}
+                    className={`text-2xl leading-none ${star <= reviewRating ? "text-yellow-400" : "text-slate-600"}`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                placeholder="Share your thoughts about this product (optional)..."
+                rows={3}
+                className="w-full rounded-lg bg-slate-700 text-white text-sm px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+
+              <button
+                type="submit"
+                disabled={reviewSubmitting}
+                className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg px-4 py-2 transition"
+              >
+                {reviewSubmitting ? "Submitting..." : "Submit Review"}
+              </button>
+            </form>
+          )}
         </div>
       )}
 
