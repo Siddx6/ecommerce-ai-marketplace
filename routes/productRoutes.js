@@ -9,6 +9,7 @@ import {
   autocompleteProducts,
   getAvailableFilters,
   smartSearchProducts,
+  getMyProducts,
 } from "../controllers/productController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
@@ -19,6 +20,7 @@ router.get("/search", searchProducts);
 router.get("/autocomplete", autocompleteProducts);
 router.get("/filters", getAvailableFilters);
 router.get("/smart-search", smartSearchProducts);
+router.get("/my-products", protect, restrictTo("seller"), getMyProducts);
 router.get("/", getAllProducts);
 router.get("/:productId", getProductById);
 

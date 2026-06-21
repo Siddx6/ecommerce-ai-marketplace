@@ -22,7 +22,7 @@ app.use(express.json({ limit: "5mb" }));
 app.use((req, res, next) => {
   const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
   res.header("Access-Control-Allow-Origin", allowedOrigin);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);

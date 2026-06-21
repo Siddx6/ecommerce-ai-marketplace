@@ -10,6 +10,8 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Wishlist from "./pages/Wishlist";
 import BecomeSeller from "./pages/BecomeSeller";
+import SellerProducts from "./pages/SellerProducts";
+import ProductForm from "./pages/ProductForm";
 
 function App() {
   return (
@@ -60,6 +62,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/sell"
+          element={
+            <ProtectedRoute>
+              <SellerProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+  path="/sell/new"
+  element={
+    <ProtectedRoute>
+      <ProductForm />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/sell/edit/:productId"
+  element={
+    <ProtectedRoute>
+      <ProductForm />
+    </ProtectedRoute>
+  }
+/>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

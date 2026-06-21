@@ -242,3 +242,12 @@ export const smartSearchProducts = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+export const getMyProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ seller: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json({ count: products.length, products });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
