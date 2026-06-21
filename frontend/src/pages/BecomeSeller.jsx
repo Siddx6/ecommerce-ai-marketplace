@@ -35,7 +35,6 @@ function BecomeSeller() {
 
     try {
       const res = await apiClient.post("/auth/become-seller", { storeName, businessDescription });
-      // eslint-disable-next-line no-undef
       localStorage.setItem("token", res.data.token);
       await refreshUser();
       navigate("/dashboard");
