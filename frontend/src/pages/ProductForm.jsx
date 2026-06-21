@@ -16,6 +16,10 @@ function ProductForm() {
     subCategory: "",
   });
   const [error, setError] = useState("");
+  const [keyFeatures, setKeyFeatures] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [tagging, setTagging] = useState(false);
+  const [benchmark, setBenchmark] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(isEditing);
 
@@ -38,6 +42,55 @@ function ProductForm() {
 
   const updateField = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const generateCopy = async () => {
+    if (!form.title || !form.category) {
+      setError("Enter a rough title and category first, then generate");
+      return;
+    }
+    setGenerating(true);
+    try {
+      const res = await apiClient.post("/seller-tools/generate-copy", {
+        roughTitle: form.title,
+        category: form.category,
+        keyFeatures,
+      });
+      updateField("title", res.data.generated.title);
+      updateField("description", res.data.generated.description);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const autoTag = async () => {
+    if (!form.title || !form.description) {
+      setError("Enter a title and description first, then auto-tag");
+      return;
+    }
+    setTagging(true);
+    try {
+      const res = await apiClient.post("/seller-tools/auto-tag", {
+        title: form.title,
+        description: form.description,
+      });
+      updateField("category", res.data.suggestion.category);
+      updateField("subCategory", res.data.suggestion.subCategory);
+    } finally {
+      setTagging(false);
+    }
+  };
+
+  const fetchBenchmark = async () => {
+    if (!form.category) return;
+    try {
+      const res = await apiClient.get("/seller-tools/pricing-benchmark", {
+        params: { category: form.category, subCategory: form.subCategory || undefined },
+      });
+      setBenchmark(res.data.benchmark);
+    } catch {
+      setBenchmark(null);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -73,6 +126,28 @@ function ProductForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="bg-indigo-600/10 border border-indigo-500/30 rounded-xl p-4 space-y-2">
+          <p className="text-indigo-300 text-sm font-medium">✨ AI Listing Generator</p>
+          <p className="text-slate-400 text-xs">
+            Type a rough title + category below, optionally list key features, then generate polished copy.
+          </p>
+          <input
+            type="text"
+            value={keyFeatures}
+            onChange={(e) => setKeyFeatures(e.target.value)}
+            placeholder="Key features (optional, e.g. waterproof, 20hr battery)"
+            className="w-full rounded-lg bg-slate-700 text-white text-sm px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <button
+            type="button"
+            onClick={generateCopy}
+            disabled={generating}
+            className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm rounded-lg px-4 py-1.5 transition"
+          >
+            {generating ? "Generating..." : "Generate Title & Description"}
+          </button>
+        </div>
+
         <div>
           <label className="block text-sm text-slate-300 mb-1">Title</label>
           <input
@@ -106,6 +181,11 @@ function ProductForm() {
               min="0"
               className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {benchmark && (
+              <p className="text-slate-400 text-xs mt-1">
+                Similar listings: ₹{benchmark.min} - ₹{benchmark.max} (avg ₹{benchmark.avg})
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-sm text-slate-300 mb-1">Stock</label>
@@ -127,6 +207,7 @@ function ProductForm() {
               type="text"
               value={form.category}
               onChange={(e) => updateField("category", e.target.value)}
+              onBlur={fetchBenchmark}
               required
               className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
             />
@@ -137,10 +218,20 @@ function ProductForm() {
               type="text"
               value={form.subCategory}
               onChange={(e) => updateField("subCategory", e.target.value)}
+              onBlur={fetchBenchmark}
               className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
+
+        <button
+          type="button"
+          onClick={autoTag}
+          disabled={tagging}
+          className="bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white text-sm rounded-lg px-4 py-1.5 transition"
+        >
+          {tagging ? "Tagging..." : "✨ Auto-tag category from title/description"}
+        </button>
 
         <button
           type="submit"
