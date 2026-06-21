@@ -109,8 +109,15 @@ export const becomeSeller = async (req, res) => {
 
     await user.save();
 
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
     res.status(200).json({
       message: "Seller application submitted. Awaiting admin approval.",
+      token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role, sellerProfile: user.sellerProfile },
     });
   } catch (err) {

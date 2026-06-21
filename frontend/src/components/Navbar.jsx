@@ -33,6 +33,11 @@ function Navbar() {
       </form>
 
       <div className="flex items-center gap-4 ml-auto">
+        {user?.role === "buyer" && (
+          <Link to="/become-seller" className="text-slate-300 hover:text-white text-sm">
+            Sell on ShopAI
+          </Link>
+        )}
         <Link to="/wishlist" className="text-slate-300 hover:text-white text-sm">
           Wishlist
         </Link>
