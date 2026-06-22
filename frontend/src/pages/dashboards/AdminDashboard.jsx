@@ -49,6 +49,20 @@ function AdminDashboard() {
         </div>
       </div>
 
+      {stats.gmvTrend && stats.gmvTrend.length > 0 && (
+        <div className="bg-slate-800 rounded-xl p-5">
+          <h2 className="text-white font-semibold mb-3">GMV Trend</h2>
+          <div className="space-y-1">
+            {stats.gmvTrend.map((d) => (
+              <div key={d.date} className="flex justify-between text-sm text-slate-300">
+                <span>{d.date}</span>
+                <span>₹{d.gmv}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {summary && (
         <div className="bg-indigo-600/10 border border-indigo-500/30 rounded-xl p-5">
           <p className="text-indigo-300 text-sm font-medium mb-1">AI Insight</p>

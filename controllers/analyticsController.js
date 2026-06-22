@@ -49,6 +49,16 @@ const computeAdminStats = async () => {
   const totalOrders = allOrders.length;
   const totalGMV = allOrders.reduce((sum, o) => sum + o.totalAmount, 0);
 
+  // Group orders by day to show a real GMV trend over time
+  const gmvByDay = {};
+  for (const order of allOrders) {
+    const day = order.createdAt.toISOString().split("T")[0]; // "2026-06-22"
+    gmvByDay[day] = (gmvByDay[day] || 0) + order.totalAmount;
+  }
+  const gmvTrend = Object.entries(gmvByDay)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, gmv]) => ({ date, gmv }));
+
   const categoryTally = {};
   const sellerTally = {};
 
@@ -87,6 +97,7 @@ const computeAdminStats = async () => {
     totalActiveProducts,
     totalOrders,
     totalGMV,
+    gmvTrend,
     topCategories,
     topSellers,
   };
