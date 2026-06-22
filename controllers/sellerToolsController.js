@@ -1,5 +1,5 @@
 import Product from "../models/Product.js";
-import { generateProductCopy, suggestCategory } from "../services/aiService.js";
+import { generateProductCopy, suggestCategory, generateProductCopyFromImageFile } from "../services/aiService.js";
 
 export const generateCopy = async (req, res) => {
   try {
@@ -74,6 +74,27 @@ export const pricingBenchmark = async (req, res) => {
       sampleSize: prices.length,
       benchmark: { min, max, avg },
     });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+export const generateCopyFromImage = async (req, res) => {
+  try {
+    const { imageUrl, category } = req.body;
+
+    if (!imageUrl) {
+      return res.status(400).json({ message: "imageUrl is required" });
+    }
+
+    // Extract just the filename from the full URL (e.g., ".../uploads/12345.jpg" -> "12345.jpg")
+    const filename = imageUrl.split("/uploads/")[1];
+    if (!filename) {
+      return res.status(400).json({ message: "Invalid image URL — must be an uploaded image" });
+    }
+
+    const copy = await generateProductCopyFromImageFile(filename, category);
+    res.status(200).json({ generated: copy });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }

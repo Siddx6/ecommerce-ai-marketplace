@@ -1,6 +1,61 @@
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const generateProductCopyFromImageFile = async (filename, category) => {
+  const filePath = path.join(__dirname, "..", "uploads", filename);
+  const imageBytes = fs.readFileSync(filePath);
+  const base64Image = imageBytes.toString("base64");
+
+  const ext = path.extname(filename).toLowerCase();
+  const mimeType = ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : "image/jpeg";
+
+  const prompt = `Look at this product photo and write professional eCommerce listing copy for it.
+${category ? `The seller says the category is: "${category}".` : ""}
+
+Return ONLY a raw JSON object (no markdown, no explanation) with these exact fields:
+{
+  "title": "a polished, concise product title based on what you see (max 70 characters)",
+  "description": "a compelling 2-4 sentence product description based on what you see in the photo"
+}`;
+
+  try {
+    const response = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              { inlineData: { mimeType, data: base64Image } },
+              { text: prompt },
+            ],
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API returned status ${response.status}`);
+    }
+
+    const data = await response.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    text = text.replace(/```json|```/g, "").trim();
+
+    return JSON.parse(text);
+  } catch (err) {
+    console.log("Image-based copy generation failed:", err.message);
+    return { title: "", description: "" };
+  }
+};
+
 export const parseSearchIntent = async (rawQuery) => {
   const prompt = `Extract search filters from this shopping query: "${rawQuery}"
 

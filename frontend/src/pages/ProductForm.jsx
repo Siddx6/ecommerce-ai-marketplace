@@ -24,6 +24,7 @@ function ProductForm() {
   const [loadingProduct, setLoadingProduct] = useState(isEditing);
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState([]);
+  const [generatingFromImage, setGeneratingFromImage] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -122,6 +123,27 @@ function ProductForm() {
     setImages((prev) => prev.filter((img) => img !== url));
   };
 
+  const generateCopyFromImage = async () => {
+    if (images.length === 0) {
+      setError("Upload a photo first, then generate from it");
+      return;
+    }
+    setGeneratingFromImage(true);
+    setError("");
+    try {
+      const res = await apiClient.post("/seller-tools/generate-copy-from-image", {
+        imageUrl: images[0],
+        category: form.category,
+      });
+      updateField("title", res.data.generated.title);
+      updateField("description", res.data.generated.description);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to generate from image");
+    } finally {
+      setGeneratingFromImage(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -201,6 +223,17 @@ function ProductForm() {
             className="text-sm text-slate-300"
           />
           {uploading && <p className="text-slate-400 text-xs mt-1">Uploading...</p>}
+
+          {images.length > 0 && (
+            <button
+              type="button"
+              onClick={generateCopyFromImage}
+              disabled={generatingFromImage}
+              className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm rounded-lg px-4 py-1.5 transition mt-2"
+            >
+              {generatingFromImage ? "Looking at photo..." : "✨ Generate Title & Description from Photo"}
+            </button>
+          )}
         </div>
 
         <div>
