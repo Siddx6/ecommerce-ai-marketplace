@@ -2,6 +2,7 @@ import Product from "../models/Product.js";
 import User from "../models/User.js";
 import { parseSearchIntent } from "../services/aiService.js";
 import { checkAndNotifyWishlist } from "../services/notificationService.js";
+import PageView from "../models/PageView.js";
 
 export const createProduct = async (req, res) => {
   try {
@@ -115,6 +116,11 @@ export const getProductById = async (req, res) => {
     if (!product || !product.isActive) {
       return res.status(404).json({ message: "Product not found" });
     }
+
+    // Record this view for traffic/conversion analytics — don't let a logging failure break the page
+    PageView.create({ product: productId, viewer: req.user?.id || null }).catch((err) =>
+      console.log("Failed to record page view:", err.message)
+    );
 
     res.status(200).json({ product });
   } catch (err) {

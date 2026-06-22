@@ -24,7 +24,7 @@ function SellerDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="bg-slate-800 rounded-xl p-5">
           <p className="text-slate-400 text-sm">Total Orders</p>
           <p className="text-white text-2xl font-bold">{stats.totalOrders}</p>
@@ -36,6 +36,14 @@ function SellerDashboard() {
         <div className="bg-slate-800 rounded-xl p-5">
           <p className="text-slate-400 text-sm">Total Revenue</p>
           <p className="text-white text-2xl font-bold">₹{stats.totalRevenue}</p>
+        </div>
+        <div className="bg-slate-800 rounded-xl p-5">
+          <p className="text-slate-400 text-sm">Product Views</p>
+          <p className="text-white text-2xl font-bold">{stats.totalViews}</p>
+        </div>
+        <div className="bg-slate-800 rounded-xl p-5">
+          <p className="text-slate-400 text-sm">Conversion Rate</p>
+          <p className="text-white text-2xl font-bold">{stats.conversionRate}%</p>
         </div>
       </div>
 

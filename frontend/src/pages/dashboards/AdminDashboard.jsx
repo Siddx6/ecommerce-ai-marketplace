@@ -30,7 +30,7 @@ function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
         <div className="bg-slate-800 rounded-xl p-5">
           <p className="text-slate-400 text-sm">Buyers</p>
           <p className="text-white text-2xl font-bold">{stats.users.totalBuyers}</p>
@@ -46,6 +46,14 @@ function AdminDashboard() {
         <div className="bg-slate-800 rounded-xl p-5">
           <p className="text-slate-400 text-sm">Platform GMV</p>
           <p className="text-white text-2xl font-bold">₹{stats.totalGMV}</p>
+        </div>
+        <div className="bg-slate-800 rounded-xl p-5">
+          <p className="text-slate-400 text-sm">Total Views</p>
+          <p className="text-white text-2xl font-bold">{stats.totalPlatformViews}</p>
+        </div>
+        <div className="bg-slate-800 rounded-xl p-5">
+          <p className="text-slate-400 text-sm">Conversion Rate</p>
+          <p className="text-white text-2xl font-bold">{stats.platformConversionRate}%</p>
         </div>
       </div>
 

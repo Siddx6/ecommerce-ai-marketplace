@@ -2,9 +2,14 @@ import Order from "../models/Order.js";
 import User from "../models/User.js";
 import Product from "../models/Product.js";
 import { generateAnalyticsSummary } from "../services/aiService.js";
+import PageView from "../models/PageView.js";
 
 const computeSellerStats = async (sellerId) => {
   const orders = await Order.find({ "items.seller": sellerId });
+
+  const sellerProducts = await Product.find({ seller: sellerId }).select("_id");
+  const sellerProductIds = sellerProducts.map((p) => p._id);
+  const totalViews = await PageView.countDocuments({ product: { $in: sellerProductIds } });
 
   let totalRevenue = 0;
   let totalUnitsSold = 0;
@@ -31,16 +36,21 @@ const computeSellerStats = async (sellerId) => {
     .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 5);
 
+  const conversionRate = totalViews > 0 ? Math.round((orders.length / totalViews) * 1000) / 10 : 0;
+
   return {
     totalOrders: orders.length,
     totalUnitsSold,
     totalRevenue,
     topProducts,
+    totalViews,
+    conversionRate,
   };
 };
 
 const computeAdminStats = async () => {
   const totalBuyers = await User.countDocuments({ role: "buyer" });
+  const totalPlatformViews = await PageView.countDocuments();
   const totalSellers = await User.countDocuments({ role: "seller" });
   const totalAdmins = await User.countDocuments({ role: "admin" });
   const totalActiveProducts = await Product.countDocuments({ isActive: true });
@@ -92,6 +102,9 @@ const computeAdminStats = async () => {
     })
   );
 
+  const platformConversionRate =
+    totalPlatformViews > 0 ? Math.round((totalOrders / totalPlatformViews) * 1000) / 10 : 0;
+
   return {
     users: { totalBuyers, totalSellers, totalAdmins },
     totalActiveProducts,
@@ -100,6 +113,8 @@ const computeAdminStats = async () => {
     gmvTrend,
     topCategories,
     topSellers,
+    totalPlatformViews,
+    platformConversionRate,
   };
 };
 
