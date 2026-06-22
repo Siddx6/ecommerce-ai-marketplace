@@ -22,6 +22,8 @@ function ProductForm() {
   const [benchmark, setBenchmark] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(isEditing);
+  const [uploading, setUploading] = useState(false);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     if (isEditing) {
@@ -35,6 +37,7 @@ function ProductForm() {
           category: p.category,
           subCategory: p.subCategory || "",
         });
+        setImages(p.images || []);
         setLoadingProduct(false);
       });
     }
@@ -93,13 +96,39 @@ function ProductForm() {
     }
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await apiClient.post("/uploads", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setImages((prev) => [...prev, res.data.url]);
+    } catch (err) {
+      setError(err.response?.data?.message || "Image upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = (url) => {
+    setImages((prev) => prev.filter((img) => img !== url));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const payload = { ...form, price: Number(form.price), stock: Number(form.stock) };
+      const payload = { ...form, price: Number(form.price), stock: Number(form.stock), images };
       if (isEditing) {
         await apiClient.patch(`/products/${productId}`, payload);
       } else {
@@ -146,6 +175,32 @@ function ProductForm() {
           >
             {generating ? "Generating..." : "Generate Title & Description"}
           </button>
+        </div>
+
+        <div>
+          <label className="block text-sm text-slate-300 mb-1">Photos</label>
+          <div className="flex flex-wrap gap-3 mb-2">
+            {images.map((url) => (
+              <div key={url} className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-700">
+                <img src={url} alt="" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeImage(url)}
+                  className="absolute top-0 right-0 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-bl-lg"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleImageUpload}
+            disabled={uploading}
+            className="text-sm text-slate-300"
+          />
+          {uploading && <p className="text-slate-400 text-xs mt-1">Uploading...</p>}
         </div>
 
         <div>

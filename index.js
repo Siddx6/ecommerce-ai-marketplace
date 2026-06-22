@@ -14,9 +14,16 @@ import wishlistRoutes from "./routes/wishlistRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import insightsRoutes from "./routes/insightsRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 const app = express();
 app.use(express.json({ limit: "5mb" }));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // CORS middleware — MUST come before routes, or responses never get the header
 app.use((req, res, next) => {
@@ -43,6 +50,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/insights", insightsRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 // MongoDB connect
 mongoose
