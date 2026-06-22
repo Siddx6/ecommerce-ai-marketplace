@@ -43,18 +43,19 @@ Examples:
   }
 };
 
-export const chatWithAssistant = async ({ message, history = [], viewingProduct = null, catalogSnapshot = [] }) => {
+export const chatWithAssistant = async ({ message, history = [], viewingProduct = null, catalogSnapshot = [], cartItems = [] }) => {
   const systemInstruction = `You are a helpful shopping assistant for an online marketplace.
 
 Rules:
 - Only recommend or describe products from the CATALOG below. Never invent products, prices, or stock that aren't listed.
 - If asked about something not in the catalog, say it's not currently available.
--- Keep answers short, friendly, and focused on helping the buyer decide.
+- Keep answers short, friendly, and focused on helping the buyer decide.
 - All prices are in Indian Rupees (INR). Always show prices exactly as given, prefixed with ₹ (e.g., a price of 2499 should be shown as ₹2499). Never convert to another currency or reformat the number.
 
 CATALOG (available products right now):
 ${JSON.stringify(catalogSnapshot)}
-${viewingProduct ? `\nThe buyer is currently viewing this specific product:\n${JSON.stringify(viewingProduct)}` : ""}`;
+${viewingProduct ? `\nThe buyer is currently viewing this specific product:\n${JSON.stringify(viewingProduct)}` : ""}
+${cartItems.length > 0 ? `\nThe buyer currently has these items in their cart:\n${JSON.stringify(cartItems)}` : ""}`;
 
   const contents = history.map((turn) => ({
     role: turn.role === "assistant" ? "model" : "user",

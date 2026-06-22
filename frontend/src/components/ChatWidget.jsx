@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import apiClient from "../api/client";
+import { useCart } from "../context/CartContext";
 
 function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +9,7 @@ function ChatWidget() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const location = useLocation();
+  const { cart } = useCart();
 
   // If we're on a product page, extract the product ID so the assistant has context
   const productMatch = location.pathname.match(/^\/products\/([^/]+)/);
@@ -23,8 +25,10 @@ function ChatWidget() {
     setInput("");
     setSending(true);
 
+    const cartProductIds = cart.items.map((item) => item.product?._id || item.product);
+
     try {
-      const res = await apiClient.post("/assistant/chat", { message: text, history, productId });
+      const res = await apiClient.post("/assistant/chat", { message: text, history, productId, cartProductIds });
       setMessages((prev) => [...prev, { role: "assistant", text: res.data.reply }]);
     } catch {
       setMessages((prev) => [...prev, { role: "assistant", text: "Sorry, something went wrong." }]);

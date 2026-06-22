@@ -3,7 +3,7 @@ import { chatWithAssistant } from "../services/aiService.js";
 
 export const chat = async (req, res) => {
   try {
-    const { message, history, productId } = req.body;
+    const { message, history, productId, cartProductIds } = req.body;
 
     if (!message) {
       return res.status(400).json({ message: "message is required" });
@@ -25,6 +25,13 @@ export const chat = async (req, res) => {
       }
     }
 
+    // If the buyer has items in their cart, fetch their details for context
+    let cartItems = [];
+    if (cartProductIds && cartProductIds.length > 0) {
+      const cartProducts = await Product.find({ _id: { $in: cartProductIds } });
+      cartItems = cartProducts.map((p) => ({ title: p.title, price: p.price }));
+    }
+
     // Give the assistant a snapshot of what's actually available right now
     const catalogProducts = await Product.find({ isActive: true })
       .select("title price category subCategory stock")
@@ -42,6 +49,7 @@ export const chat = async (req, res) => {
       message,
       history: history || [],
       viewingProduct,
+      cartItems,
       catalogSnapshot,
     });
 
