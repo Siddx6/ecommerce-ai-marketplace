@@ -18,7 +18,7 @@ function Signup() {
 
     try {
       await signup(name, email, password);
-      navigate("/dashboard");
+      navigate("/shop");
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     } finally {
@@ -27,62 +27,75 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
-      <div className="w-full max-w-sm bg-slate-800 rounded-xl p-8 shadow-lg">
-        <h1 className="text-2xl font-bold text-white mb-6">Create an account</h1>
+    <div className="min-h-screen bg-ink flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <Link to="/" className="font-display text-2xl font-bold text-cream block mb-10">
+          ShopAI
+        </Link>
 
-        {error && (
-          <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-2 mb-4">
-            {error}
-          </div>
-        )}
+        <div className="bg-surface rounded p-10 border-l-4 border-lime">
+          <h1 className="font-display text-3xl font-bold text-cream mb-1">Get started.</h1>
+          <p className="text-muted text-sm mb-7">Create your ShopAI account</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+          {error && (
+            <div className="bg-coral/10 text-coral text-sm rounded px-4 py-2.5 mb-5 font-medium">
+              {error}
+            </div>
+          )}
 
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="w-full rounded bg-ink border border-surface-light text-cream px-4 py-3 outline-none focus:border-lime transition"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm text-slate-300 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded bg-ink border border-surface-light text-cream px-4 py-3 outline-none focus:border-lime transition"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg py-2 transition disabled:opacity-50"
-          >
-            {loading ? "Creating account..." : "Sign up"}
-          </button>
-        </form>
+            <div>
+              <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded bg-ink border border-surface-light text-cream px-4 py-3 outline-none focus:border-lime transition"
+              />
+            </div>
 
-        <p className="text-slate-400 text-sm mt-4 text-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-lime text-lime-dark font-display font-bold text-base rounded py-3.5 hover:opacity-90 disabled:opacity-50 transition"
+            >
+              {loading ? "Creating account..." : "Sign up"}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-muted text-sm mt-6 text-center">
           Already have an account?{" "}
-          <Link to="/login" className="text-indigo-400 hover:underline">
+          <Link to="/login" className="text-lime font-semibold hover:underline">
             Log in
           </Link>
         </p>
