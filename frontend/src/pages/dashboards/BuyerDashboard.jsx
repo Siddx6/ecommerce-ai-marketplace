@@ -24,56 +24,56 @@ function BuyerDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p className="text-slate-400">Loading your dashboard...</p>;
+  if (loading) return <p className="text-muted">Loading your dashboard...</p>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div className="bg-slate-800 rounded-xl p-5">
-        <h2 className="text-white font-semibold mb-3">Your Orders ({orders.length})</h2>
+      <div className="bg-surface rounded p-6">
+        <h2 className="font-display font-bold text-cream mb-4">Your Orders ({orders.length})</h2>
         {orders.length === 0 ? (
-          <p className="text-slate-400 text-sm">No orders yet.</p>
+          <p className="text-muted text-sm">No orders yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {orders.slice(0, 5).map((order) => (
-              <li key={order._id} className="text-slate-300 text-sm flex justify-between">
-                <span>{order.items.length} item(s)</span>
-                <span className="text-slate-400">₹{order.totalAmount}</span>
+              <li key={order._id} className="text-sm flex justify-between">
+                <span className="text-cream">{order.items.length} item(s)</span>
+                <span className="font-mono text-coral">₹{order.totalAmount}</span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <div className="bg-slate-800 rounded-xl p-5">
-        <h2 className="text-white font-semibold mb-3">Wishlist ({wishlist.length})</h2>
+      <div className="bg-surface rounded p-6">
+        <h2 className="font-display font-bold text-cream mb-4">Wishlist ({wishlist.length})</h2>
         {wishlist.length === 0 ? (
-          <p className="text-slate-400 text-sm">Nothing saved yet.</p>
+          <p className="text-muted text-sm">Nothing saved yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {wishlist.map((item) => (
-              <li key={item._id} className="text-slate-300 text-sm">
-                {item.product?.title} — ₹{item.product?.price}
+              <li key={item._id} className="text-sm text-cream">
+                {item.product?.title} — <span className="font-mono text-coral">₹{item.product?.price}</span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <div className="bg-slate-800 rounded-xl p-5">
-        <h2 className="text-white font-semibold mb-3">
-          Notifications{" "}
+      <div className="bg-surface rounded p-6">
+        <h2 className="font-display font-bold text-cream mb-4 flex items-center gap-2">
+          Notifications
           {notifications.filter((n) => !n.isRead).length > 0 && (
-            <span className="bg-indigo-600 text-xs rounded-full px-2 py-0.5 ml-1">
+            <span className="bg-coral text-coral-dark text-xs font-bold rounded-full px-2 py-0.5">
               {notifications.filter((n) => !n.isRead).length} new
             </span>
           )}
         </h2>
         {notifications.length === 0 ? (
-          <p className="text-slate-400 text-sm">No notifications.</p>
+          <p className="text-muted text-sm">No notifications.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {notifications.slice(0, 5).map((n) => (
-              <li key={n._id} className="text-slate-300 text-sm">
+              <li key={n._id} className="text-sm text-cream">
                 {n.message}
               </li>
             ))}
@@ -82,17 +82,19 @@ function BuyerDashboard() {
       </div>
 
       {segment && (
-        <div className="bg-slate-800 rounded-xl p-5 md:col-span-2 lg:col-span-3">
-          <h2 className="text-white font-semibold mb-3">Your Profile</h2>
-          <div className="flex flex-wrap gap-2 mb-2">
+        <div className="bg-surface rounded p-6 border-t-[3px] border-lime md:col-span-2 lg:col-span-3">
+          <span className="inline-block bg-lime text-lime-dark text-xs font-bold uppercase tracking-wider rounded px-2.5 py-1 mb-3">
+            Your profile
+          </span>
+          <div className="flex flex-wrap gap-2 mb-3">
             {segment.segments.map((tag) => (
-              <span key={tag} className="bg-indigo-600/20 text-indigo-300 text-xs rounded-full px-3 py-1">
+              <span key={tag} className="bg-ink text-cream text-xs font-medium rounded px-3 py-1.5 border border-surface-light">
                 {tag.replace(/_/g, " ")}
               </span>
             ))}
           </div>
-          <p className="text-slate-400 text-sm">
-            {segment.stats.totalOrders} orders • ₹{segment.stats.totalSpend} total spend
+          <p className="text-muted text-sm">
+            {segment.stats.totalOrders} orders • <span className="font-mono text-coral">₹{segment.stats.totalSpend}</span> total spend
           </p>
         </div>
       )}

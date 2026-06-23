@@ -7,21 +7,23 @@ function Dashboard() {
   const { user, logout } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
+    <div className="min-h-screen bg-ink">
+      <header className="flex items-center justify-between px-8 py-6 border-b border-surface-light">
         <div>
-          <h1 className="text-white font-semibold text-lg">Hi, {user.name}</h1>
-          <span className="text-xs uppercase tracking-wide text-indigo-400">{user.role}</span>
+          <h1 className="font-display font-bold text-2xl text-cream">Hi, {user.name}</h1>
+          <span className="inline-block mt-1 bg-lime text-lime-dark text-xs font-bold uppercase tracking-wider rounded px-2 py-0.5">
+            {user.role}
+          </span>
         </div>
         <button
           onClick={logout}
-          className="text-slate-300 hover:text-white text-sm bg-slate-800 hover:bg-slate-700 rounded-lg px-4 py-2 transition"
+          className="text-cream text-sm font-medium bg-surface hover:bg-surface-light border border-surface-light rounded px-4 py-2 transition"
         >
           Log out
         </button>
       </header>
 
-      <main className="p-6">
+      <main className="p-8">
         {user.role === "buyer" && <BuyerDashboard />}
         {user.role === "seller" && <SellerDashboard />}
         {user.role === "admin" && <AdminDashboard />}
