@@ -42,16 +42,16 @@ function Storefront() {
   };
 
   return (
-    <div className="flex gap-6 p-6">
+    <div className="flex gap-8 p-6">
       <aside className="w-48 shrink-0">
-        <h2 className="text-white font-semibold mb-3">Categories</h2>
+        <h2 className="font-display font-bold text-cream mb-3">Categories</h2>
         <ul className="space-y-1">
           {categories.map((cat) => (
             <li key={cat}>
               <button
                 onClick={() => selectCategory(cat)}
-                className={`text-sm w-full text-left px-2 py-1 rounded-lg transition ${
-                  cat === category ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-white"
+                className={`text-sm w-full text-left px-3 py-2 rounded transition font-medium ${
+                  cat === category ? "bg-coral text-coral-dark" : "text-muted hover:text-cream"
                 }`}
               >
                 {cat}
@@ -63,16 +63,16 @@ function Storefront() {
 
       <main className="flex-1">
         {q && (
-          <p className="text-slate-400 text-sm mb-4">
-            Showing results for <span className="text-white">"{q}"</span>
+          <p className="text-muted text-sm mb-5">
+            Showing results for <span className="text-cream font-semibold">"{q}"</span>
             {interpretedAs?.maxPrice && <span> under ₹{interpretedAs.maxPrice}</span>}
           </p>
         )}
 
         {loading ? (
-          <p className="text-slate-400">Loading products...</p>
+          <p className="text-muted">Loading products...</p>
         ) : products.length === 0 ? (
-          <p className="text-slate-400">No products found.</p>
+          <p className="text-muted">No products found.</p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {products.map((product) => (

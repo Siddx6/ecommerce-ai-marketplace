@@ -49,8 +49,8 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-slate-800 border-b border-slate-700 px-6 py-3 flex items-center gap-6">
-      <Link to="/shop" className="text-white font-bold text-lg whitespace-nowrap">
+    <nav className="bg-surface border-b border-surface-light px-6 py-4 flex items-center gap-6">
+      <Link to="/shop" className="font-display font-bold text-xl text-cream whitespace-nowrap">
         ShopAI
       </Link>
 
@@ -62,16 +62,16 @@ function Navbar() {
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           placeholder="Search products..."
-          className="w-full rounded-lg bg-slate-700 text-white placeholder-slate-400 px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full rounded bg-ink border border-surface-light text-cream placeholder-muted px-4 py-2.5 outline-none focus:border-coral transition"
         />
 
         {showSuggestions && suggestions.length > 0 && (
-          <ul className="absolute top-full left-0 right-0 mt-1 bg-slate-700 rounded-lg shadow-lg overflow-hidden z-50">
+          <ul className="absolute top-full left-0 right-0 mt-1 bg-surface border border-surface-light rounded overflow-hidden z-50">
             {suggestions.map((s, i) => (
               <li
                 key={i}
                 onMouseDown={() => selectSuggestion(s)}
-                className="px-4 py-2 text-sm text-white hover:bg-slate-600 cursor-pointer"
+                className="px-4 py-2.5 text-sm text-cream hover:bg-surface-light cursor-pointer"
               >
                 {s}
               </li>
@@ -80,26 +80,26 @@ function Navbar() {
         )}
       </form>
 
-      <div className="flex items-center gap-4 ml-auto">
+      <div className="flex items-center gap-5 ml-auto">
         {user?.role === "buyer" && (
-          <Link to="/become-seller" className="text-slate-300 hover:text-white text-sm">
+          <Link to="/become-seller" className="text-muted hover:text-cream text-sm font-medium transition">
             Sell on ShopAI
           </Link>
         )}
         {user?.role === "seller" && (
-          <Link to="/sell" className="text-slate-300 hover:text-white text-sm">
+          <Link to="/sell" className="text-muted hover:text-cream text-sm font-medium transition">
             My Products
           </Link>
         )}
 
-        <Link to="/wishlist" className="text-slate-300 hover:text-white text-sm">
+        <Link to="/wishlist" className="text-muted hover:text-cream text-sm font-medium transition">
           Wishlist
         </Link>
 
-        <Link to="/cart" className="relative text-slate-300 hover:text-white text-sm">
+        <Link to="/cart" className="relative text-muted hover:text-cream text-sm font-medium transition">
           Cart
           {itemCount > 0 && (
-            <span className="absolute -top-2 -right-3 bg-indigo-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="absolute -top-2 -right-3 bg-coral text-coral-dark text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
               {itemCount}
             </span>
           )}
@@ -107,12 +107,12 @@ function Navbar() {
 
         {user ? (
           <>
-            <Link to="/dashboard" className="text-slate-300 hover:text-white text-sm">
+            <Link to="/dashboard" className="text-cream text-sm font-semibold hover:text-coral transition">
               {user.name}
             </Link>
             <button
               onClick={logout}
-              className="text-slate-300 hover:text-white text-sm bg-slate-700 hover:bg-slate-600 rounded-lg px-3 py-1.5 transition"
+              className="text-cream text-sm font-medium bg-ink hover:bg-surface-light border border-surface-light rounded px-4 py-2 transition"
             >
               Log out
             </button>
@@ -120,7 +120,7 @@ function Navbar() {
         ) : (
           <Link
             to="/login"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-lg px-4 py-1.5 transition"
+            className="bg-coral text-coral-dark font-display font-bold text-sm rounded px-5 py-2.5 hover:opacity-90 transition"
           >
             Log in
           </Link>
