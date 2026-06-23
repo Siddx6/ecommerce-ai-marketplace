@@ -12,6 +12,7 @@ import Wishlist from "./pages/Wishlist";
 import BecomeSeller from "./pages/BecomeSeller";
 import SellerProducts from "./pages/SellerProducts";
 import ProductForm from "./pages/ProductForm";
+import Landing from "./pages/Landing";
 
 function App() {
   return (
@@ -19,8 +20,10 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
+      <Route path="/" element={<Landing />} />
+
       <Route element={<Layout />}>
-        <Route path="/" element={<Storefront />} />
+        <Route path="/shop" element={<Storefront />} />
         <Route path="/products/:productId" element={<ProductDetail />} />
         <Route
           path="/cart"

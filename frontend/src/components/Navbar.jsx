@@ -34,7 +34,7 @@ function Navbar() {
   const runSearch = (text) => {
     setShowSuggestions(false);
     if (text.trim()) {
-      navigate(`/?q=${encodeURIComponent(text.trim())}`);
+      navigate(`/shop?q=${encodeURIComponent(text.trim())}`);
     }
   };
 
@@ -50,7 +50,7 @@ function Navbar() {
 
   return (
     <nav className="bg-slate-800 border-b border-slate-700 px-6 py-3 flex items-center gap-6">
-      <Link to="/" className="text-white font-bold text-lg whitespace-nowrap">
+      <Link to="/shop" className="text-white font-bold text-lg whitespace-nowrap">
         ShopAI
       </Link>
 
