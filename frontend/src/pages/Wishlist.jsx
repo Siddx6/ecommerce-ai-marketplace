@@ -35,13 +35,13 @@ function Wishlist() {
     await removeItem(productId);
   };
 
-  if (loading) return <p className="text-slate-400 p-6">Loading...</p>;
+  if (loading) return <p className="text-muted p-6">Loading...</p>;
 
   if (items.length === 0) {
     return (
       <div className="p-6 text-center">
-        <p className="text-slate-400">Your wishlist is empty.</p>
-        <Link to="/" className="text-indigo-400 hover:underline text-sm">
+        <p className="text-muted">Your wishlist is empty.</p>
+        <Link to="/shop" className="text-coral font-semibold hover:underline text-sm">
           Continue shopping
         </Link>
       </div>
@@ -50,38 +50,41 @@ function Wishlist() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-white text-xl font-bold">Your Wishlist</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Your Wishlist</h1>
 
       {nudge && (
-        <div className="bg-indigo-600/10 border border-indigo-500/30 rounded-xl p-4">
-          <p className="text-indigo-300 text-sm">{nudge}</p>
+        <div className="bg-surface rounded p-5 border-t-[3px] border-lime">
+          <span className="inline-block bg-lime text-lime-dark text-xs font-bold uppercase tracking-wider rounded px-2.5 py-1 mb-2">
+            AI nudge
+          </span>
+          <p className="text-cream text-sm">{nudge}</p>
         </div>
       )}
 
       <div className="space-y-3">
         {items.map((item) => (
-          <div key={item._id} className="bg-slate-800 rounded-xl p-4 flex items-center justify-between">
+          <div key={item._id} className="bg-surface rounded p-5 flex items-center justify-between">
             <div>
-              <Link to={`/products/${item.product._id}`} className="text-white font-medium hover:underline">
+              <Link to={`/products/${item.product._id}`} className="text-cream font-semibold hover:text-coral transition">
                 {item.product.title}
               </Link>
-              <p className="text-slate-400 text-sm">
+              <p className="font-mono text-muted text-sm mt-1">
                 ₹{item.product.price}{" "}
-                {item.product.stock === 0 && <span className="text-red-400">• Out of stock</span>}
+                {item.product.stock === 0 && <span className="text-coral font-sans">• Out of stock</span>}
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => moveToCart(item.product._id)}
                 disabled={item.product.stock === 0}
-                className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm rounded-lg px-4 py-1.5 transition"
+                className="bg-coral text-coral-dark font-display font-bold text-sm rounded px-4 py-2 hover:opacity-90 disabled:opacity-50 transition"
               >
                 Add to Cart
               </button>
               <button
                 onClick={() => removeItem(item.product._id)}
-                className="text-red-400 hover:text-red-300 text-sm"
+                className="text-coral hover:opacity-80 text-sm font-semibold transition"
               >
                 Remove
               </button>

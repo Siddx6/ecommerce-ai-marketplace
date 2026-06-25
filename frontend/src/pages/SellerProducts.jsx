@@ -28,46 +28,48 @@ function SellerProducts() {
     loadProducts();
   };
 
-  if (loading) return <p className="text-slate-400 p-6">Loading...</p>;
+  if (loading) return <p className="text-muted p-6">Loading...</p>;
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-white text-xl font-bold">My Products ({products.length})</h1>
+        <h1 className="font-display text-2xl font-bold text-cream">My Products ({products.length})</h1>
         <Link
           to="/sell/new"
-          className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg px-4 py-2 transition"
+          className="bg-coral text-coral-dark font-display font-bold text-sm rounded px-5 py-2.5 hover:opacity-90 transition"
         >
           + Add Product
         </Link>
       </div>
 
       {products.length === 0 ? (
-        <p className="text-slate-400">You haven't listed anything yet.</p>
+        <p className="text-muted">You haven't listed anything yet.</p>
       ) : (
         <div className="space-y-3">
           {products.map((p) => (
-            <div key={p._id} className="bg-slate-800 rounded-xl p-4 flex items-center justify-between">
+            <div key={p._id} className="bg-surface rounded p-5 flex items-center justify-between">
               <div>
-                <p className="text-white font-medium">
+                <p className="text-cream font-semibold">
                   {p.title}{" "}
-                  {!p.isActive && <span className="text-red-400 text-xs ml-2">(Inactive)</span>}
+                  {!p.isActive && <span className="text-coral text-xs font-bold ml-2">(Inactive)</span>}
                 </p>
-                <p className="text-slate-400 text-sm">
-                  ₹{p.price} • {p.stock} in stock • {p.category}
+                <p className="font-mono text-muted text-sm mt-1">
+                  ₹{p.price} <span className="font-sans">• {p.stock} in stock • {p.category}</span>
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <Link
                   to={`/sell/edit/${p._id}`}
-                  className="text-indigo-400 hover:text-indigo-300 text-sm"
+                  className="text-coral hover:opacity-80 text-sm font-semibold transition"
                 >
                   Edit
                 </Link>
                 <button
                   onClick={() => toggleActive(p)}
-                  className={`text-sm ${p.isActive ? "text-red-400 hover:text-red-300" : "text-green-400 hover:text-green-300"}`}
+                  className={`text-sm font-semibold transition ${
+                    p.isActive ? "text-coral hover:opacity-80" : "text-lime hover:opacity-80"
+                  }`}
                 >
                   {p.isActive ? "Deactivate" : "Reactivate"}
                 </button>
