@@ -31,14 +31,17 @@ function Checkout() {
 
   if (placedOrder) {
     return (
-      <div className="p-6 max-w-lg mx-auto text-center space-y-4">
-        <h1 className="text-2xl font-bold text-white">Order placed! 🎉</h1>
-        <p className="text-slate-400">
-          Your order total was <span className="text-white">₹{placedOrder.totalAmount}</span>.
+      <div className="p-6 max-w-lg mx-auto text-center space-y-5">
+        <span className="inline-block bg-lime text-lime-dark text-xs font-bold uppercase tracking-wider rounded px-2.5 py-1">
+          Order placed
+        </span>
+        <h1 className="font-display text-3xl font-bold text-cream">You're all set.</h1>
+        <p className="text-muted">
+          Your order total was <span className="font-mono text-coral">₹{placedOrder.totalAmount}</span>.
         </p>
         <button
           onClick={() => navigate("/dashboard")}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg px-6 py-2 transition"
+          className="bg-coral text-coral-dark font-display font-bold rounded px-7 py-3 hover:opacity-90 transition"
         >
           View Order History
         </button>
@@ -47,48 +50,50 @@ function Checkout() {
   }
 
   if (cart.items.length === 0) {
-    return <p className="text-slate-400 p-6 text-center">Your cart is empty.</p>;
+    return <p className="text-muted p-6 text-center">Your cart is empty.</p>;
   }
 
   return (
     <div className="p-6 max-w-lg mx-auto space-y-6">
-      <h1 className="text-white text-xl font-bold">Checkout</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Checkout</h1>
 
-      <div className="bg-slate-800 rounded-xl p-4 space-y-2">
+      <div className="bg-surface rounded p-5 space-y-2.5">
         {cart.items.map((item) => (
-          <div key={item._id} className="flex justify-between text-sm text-slate-300">
-            <span>
+          <div key={item._id} className="flex justify-between text-sm">
+            <span className="text-cream">
               {item.product.title} x{item.quantity}
             </span>
-            <span>₹{item.product.price * item.quantity}</span>
+            <span className="font-mono text-coral">₹{item.product.price * item.quantity}</span>
           </div>
         ))}
-        <div className="border-t border-slate-700 pt-2 flex justify-between text-white font-semibold">
-          <span>Total</span>
-          <span>₹{total}</span>
+        <div className="border-t border-surface-light pt-3 flex justify-between font-semibold">
+          <span className="text-cream font-display">Total</span>
+          <span className="font-mono text-coral text-lg">₹{total}</span>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-2">{error}</div>
+        <div className="bg-coral/10 text-coral text-sm rounded px-4 py-2.5 font-medium">{error}</div>
       )}
 
       <form onSubmit={handlePlaceOrder} className="space-y-4">
         <div>
-          <label className="block text-sm text-slate-300 mb-1">Shipping Address</label>
+          <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">
+            Shipping Address
+          </label>
           <textarea
             value={shippingAddress}
             onChange={(e) => setShippingAddress(e.target.value)}
             required
             rows={3}
-            className="w-full rounded-lg bg-slate-700 text-white px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full rounded bg-ink border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold rounded-lg py-2 transition"
+          className="w-full bg-coral text-coral-dark font-display font-bold rounded py-3.5 hover:opacity-90 disabled:opacity-50 transition"
         >
           {loading ? "Placing order..." : "Place Order"}
         </button>

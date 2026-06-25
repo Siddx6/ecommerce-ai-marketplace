@@ -28,8 +28,8 @@ function Cart() {
   if (cart.items.length === 0) {
     return (
       <div className="p-6 text-center">
-        <p className="text-slate-400">Your cart is empty.</p>
-        <Link to="/" className="text-indigo-400 hover:underline text-sm">
+        <p className="text-muted">Your cart is empty.</p>
+        <Link to="/shop" className="text-coral font-semibold hover:underline text-sm">
           Continue shopping
         </Link>
       </div>
@@ -38,40 +38,40 @@ function Cart() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-white text-xl font-bold">Your Cart</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Your Cart</h1>
 
       <div className="space-y-3">
         {cart.items.map((item) => (
-          <div key={item._id} className="bg-slate-800 rounded-xl p-4 flex items-center justify-between">
+          <div key={item._id} className="bg-surface rounded p-5 flex items-center justify-between">
             <div>
-              <Link to={`/products/${item.product._id}`} className="text-white font-medium hover:underline">
+              <Link to={`/products/${item.product._id}`} className="text-cream font-semibold hover:text-coral transition">
                 {item.product.title}
               </Link>
-              <p className="text-slate-400 text-sm">₹{item.product.price} each</p>
+              <p className="font-mono text-muted text-sm mt-1">₹{item.product.price} each</p>
             </div>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
-                className="bg-slate-700 hover:bg-slate-600 text-white w-7 h-7 rounded-lg"
+                className="bg-ink border border-surface-light hover:border-coral text-cream w-7 h-7 rounded transition"
               >
                 −
               </button>
-              <span className="text-white w-6 text-center">{item.quantity}</span>
+              <span className="text-cream font-semibold w-6 text-center">{item.quantity}</span>
               <button
                 onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
-                className="bg-slate-700 hover:bg-slate-600 text-white w-7 h-7 rounded-lg"
+                className="bg-ink border border-surface-light hover:border-coral text-cream w-7 h-7 rounded transition"
               >
                 +
               </button>
 
-              <span className="text-white font-medium w-20 text-right">
+              <span className="font-mono text-coral font-medium w-20 text-right">
                 ₹{item.product.price * item.quantity}
               </span>
 
               <button
                 onClick={() => removeItem(item.product._id)}
-                className="text-red-400 hover:text-red-300 text-sm ml-2"
+                className="text-coral hover:opacity-80 text-sm font-semibold ml-2 transition"
               >
                 Remove
               </button>
@@ -82,27 +82,29 @@ function Cart() {
 
       {recommendations.length > 0 && (
         <div>
-          <h2 className="text-white font-semibold mb-2">You might also like</h2>
+          <h2 className="font-display font-bold text-cream mb-3">You might also like</h2>
           <div className="flex gap-3 overflow-x-auto">
             {recommendations.map((p) => (
               <Link
                 key={p._id}
                 to={`/products/${p._id}`}
-                className="bg-slate-800 rounded-lg p-3 min-w-[160px] hover:ring-2 hover:ring-indigo-500"
+                className="bg-surface rounded p-4 min-w-[160px] hover:ring-2 hover:ring-coral transition"
               >
-                <p className="text-white text-sm font-medium truncate">{p.title}</p>
-                <p className="text-slate-400 text-sm">₹{p.price}</p>
+                <p className="text-cream text-sm font-semibold truncate">{p.title}</p>
+                <p className="font-mono text-coral text-sm mt-1">₹{p.price}</p>
               </Link>
             ))}
           </div>
         </div>
       )}
 
-      <div className="flex items-center justify-between border-t border-slate-700 pt-4">
-        <span className="text-white text-lg font-bold">Total: ₹{total}</span>
+      <div className="flex items-center justify-between border-t border-surface-light pt-5">
+        <span className="font-display text-cream text-xl font-bold">
+          Total: <span className="font-mono text-coral">₹{total}</span>
+        </span>
         <button
           onClick={() => navigate("/checkout")}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg px-6 py-2 transition"
+          className="bg-coral text-coral-dark font-display font-bold rounded px-7 py-3 hover:opacity-90 transition"
         >
           Proceed to Checkout
         </button>
