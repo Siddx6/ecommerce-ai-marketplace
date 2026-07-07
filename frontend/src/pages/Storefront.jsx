@@ -22,10 +22,16 @@ function Storefront() {
       ? apiClient.get(`/products/smart-search?q=${encodeURIComponent(q)}`)
       : apiClient.get("/products", { params: category ? { category } : {} });
 
-    Promise.all([fetchProducts, apiClient.get("/products/filters", { params: category ? { category } : {} })])
+    Promise.all([
+      fetchProducts,
+      apiClient.get("/products/filters", {
+        params: category ? { category } : {},
+      }),
+    ])
       .then(([productsRes, filtersRes]) => {
         setProducts(productsRes.data.products);
-        if (productsRes.data.interpretedAs) setInterpretedAs(productsRes.data.interpretedAs);
+        if (productsRes.data.interpretedAs)
+          setInterpretedAs(productsRes.data.interpretedAs);
         setCategories(filtersRes.data.categories);
       })
       .finally(() => setLoading(false));
@@ -42,16 +48,20 @@ function Storefront() {
   };
 
   return (
-    <div className="flex gap-8 p-6">
-      <aside className="w-48 shrink-0">
-        <h2 className="font-display font-bold text-cream mb-3">Categories</h2>
+    <div className="flex gap-6 p-6 bg-[#F3F3F6] min-h-screen">
+      <aside className="w-52 shrink-0 bg-white border border-[#E4E4EA] rounded-lg p-4 h-fit">
+        <h2 className="font-display font-bold text-[#1A1A22] text-sm mb-3">
+          Categories
+        </h2>
         <ul className="space-y-1">
           {categories.map((cat) => (
             <li key={cat}>
               <button
                 onClick={() => selectCategory(cat)}
-                className={`text-sm w-full text-left px-3 py-2 rounded transition font-medium ${
-                  cat === category ? "bg-coral text-coral-dark" : "text-muted hover:text-cream"
+                className={`text-xs w-full text-left px-3 py-2 rounded-md transition font-medium ${
+                  cat === category
+                    ? "bg-[#EDEBFF] text-[#5B3DF5]"
+                    : "text-[#6B6B76] hover:bg-[#F3F3F6]"
                 }`}
               >
                 {cat}
@@ -63,18 +73,21 @@ function Storefront() {
 
       <main className="flex-1">
         {q && (
-          <p className="text-muted text-sm mb-5">
-            Showing results for <span className="text-cream font-semibold">"{q}"</span>
-            {interpretedAs?.maxPrice && <span> under ₹{interpretedAs.maxPrice}</span>}
+          <p className="text-[#6B6B76] text-sm mb-4">
+            Showing results for{" "}
+            <span className="text-[#1A1A22] font-semibold">"{q}"</span>
+            {interpretedAs?.maxPrice && (
+              <span> under ₹{interpretedAs.maxPrice}</span>
+            )}
           </p>
         )}
 
         {loading ? (
-          <p className="text-muted">Loading products...</p>
+          <p className="text-[#6B6B76] text-sm">Loading products...</p>
         ) : products.length === 0 ? (
-          <p className="text-muted">No products found.</p>
+          <p className="text-[#6B6B76] text-sm">No products found.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

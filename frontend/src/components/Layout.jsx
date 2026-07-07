@@ -4,7 +4,7 @@ import ChatWidget from "./ChatWidget";
 
 function Layout() {
   return (
-    <div className="min-h-screen bg-ink">
+    <div className="min-h-screen bg-[#F3F3F6]">
       <Navbar />
       <Outlet />
       <ChatWidget />

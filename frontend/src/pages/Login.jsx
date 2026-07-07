@@ -14,7 +14,6 @@ function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       await login(email, password);
       navigate("/shop");
@@ -26,65 +25,74 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-ink flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#F3F3F6] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <Link to="/" className="font-display text-2xl font-bold text-cream block mb-10">
-          ShopAI
+        <Link
+          to="/"
+          className="font-display text-2xl font-bold text-[#1A1A22] block mb-8 text-center"
+        >
+          Shop<span className="text-[#FFA41C]">AI</span>
         </Link>
 
-        <div className="bg-surface rounded p-10 border-l-4 border-coral">
-          <h1 className="font-display text-3xl font-bold text-cream mb-1">Welcome back.</h1>
-          <p className="text-muted text-sm mb-7">Log in to ShopAI</p>
+        <div className="bg-white rounded-xl border border-[#E4E4EA] shadow-sm p-8">
+          <h1 className="font-display text-2xl font-bold text-[#1A1A22] mb-1">
+            Sign in
+          </h1>
+          <p className="text-[#6B6B76] text-sm mb-6">
+            Welcome back to ShopAI
+          </p>
 
           {error && (
-            <div className="bg-coral/10 text-coral text-sm rounded px-4 py-2.5 mb-5 font-medium">
+            <div className="bg-[#FCEBEB] text-[#791F1F] text-sm rounded-md px-3 py-2 mb-4">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">
+              <label className="text-xs font-medium text-[#6B6B76] mb-1 block">
                 Email
               </label>
               <input
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full rounded bg-ink border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
+                placeholder="name@example.com"
+                className="w-full rounded-md border border-[#E4E4EA] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5B3DF5] focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">
+              <label className="text-xs font-medium text-[#6B6B76] mb-1 block">
                 Password
               </label>
               <input
                 type="password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full rounded bg-ink border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
+                placeholder="••••••••"
+                className="w-full rounded-md border border-[#E4E4EA] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5B3DF5] focus:border-transparent"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-coral text-coral-dark font-display font-bold text-base rounded py-3.5 hover:opacity-90 disabled:opacity-50 transition"
+              className="w-full bg-[#5B3DF5] hover:bg-[#4429D6] text-white font-semibold text-sm rounded-md py-2.5 transition disabled:opacity-60"
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
-        </div>
 
-        <p className="text-muted text-sm mt-6 text-center">
-          Don't have an account?{" "}
-          <Link to="/signup" className="text-coral font-semibold hover:underline">
-            Sign up
-          </Link>
-        </p>
+          <p className="text-center text-sm text-[#6B6B76] mt-6">
+            New to ShopAI?{" "}
+            <Link to="/signup" className="text-[#5B3DF5] font-semibold">
+              Create an account
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

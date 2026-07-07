@@ -3,8 +3,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Storefront from "./pages/Storefront";
-import Layout from "./components/Layout";
-import ProtectedRoute from "./components/ProtectedRoute";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -12,32 +10,34 @@ import Wishlist from "./pages/Wishlist";
 import BecomeSeller from "./pages/BecomeSeller";
 import SellerProducts from "./pages/SellerProducts";
 import ProductForm from "./pages/ProductForm";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Landing from "./pages/Landing";
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+<Route path="/signup" element={<Signup />} />
+<Route path="/" element={<Landing />} />
 
-      <Route path="/" element={<Landing />} />
-
-      <Route element={<Layout />}>
-        <Route path="/shop" element={<Storefront />} />
+<Route element={<Layout />}>
+<Route path="/shop" element={<Storefront />} />
         <Route path="/products/:productId" element={<ProductDetail />} />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
             </ProtectedRoute>
           }
         />
@@ -74,21 +74,21 @@ function App() {
           }
         />
         <Route
-  path="/sell/new"
-  element={
-    <ProtectedRoute>
-      <ProductForm />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/sell/edit/:productId"
-  element={
-    <ProtectedRoute>
-      <ProductForm />
-    </ProtectedRoute>
-  }
-/>
+          path="/sell/new"
+          element={
+            <ProtectedRoute>
+              <ProductForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sell/edit/:productId"
+          element={
+            <ProtectedRoute>
+              <ProductForm />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

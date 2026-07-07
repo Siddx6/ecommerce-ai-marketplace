@@ -164,173 +164,192 @@ function ProductForm() {
     }
   };
 
-  if (loadingProduct) return <p className="text-muted p-6">Loading...</p>;
+  if (loadingProduct)
+    return <p className="text-[#6B6B76] p-6 bg-[#F3F3F6] min-h-screen">Loading...</p>;
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <h1 className="font-display text-2xl font-bold text-cream mb-6">
-        {isEditing ? "Edit Product" : "Add New Product"}
-      </h1>
+    <div className="bg-[#F3F3F6] min-h-screen p-6">
+      <div className="max-w-lg mx-auto">
+        <h1 className="font-display text-2xl font-bold text-[#1A1A22] mb-6">
+          {isEditing ? "Edit Product" : "Add New Product"}
+        </h1>
 
-      {error && (
-        <div className="bg-coral/10 text-coral text-sm rounded px-4 py-2.5 mb-5 font-medium">{error}</div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="bg-surface rounded p-5 space-y-3 border-t-[3px] border-lime">
-          <span className="inline-block bg-lime text-lime-dark text-xs font-bold uppercase tracking-wider rounded px-2.5 py-1">
-            AI listing generator
-          </span>
-          <p className="text-muted text-xs">
-            Type a rough title + category below, optionally list key features, then generate polished copy.
-          </p>
-          <input
-            type="text"
-            value={keyFeatures}
-            onChange={(e) => setKeyFeatures(e.target.value)}
-            placeholder="Key features (optional, e.g. waterproof, 20hr battery)"
-            className="w-full rounded bg-ink border border-surface-light text-cream text-sm px-3 py-2.5 outline-none focus:border-lime transition"
-          />
-          <button
-            type="button"
-            onClick={generateCopy}
-            disabled={generating}
-            className="bg-lime text-lime-dark font-display font-bold text-sm rounded px-4 py-2 hover:opacity-90 disabled:opacity-50 transition"
-          >
-            {generating ? "Generating..." : "Generate Title & Description"}
-          </button>
-        </div>
-
-        <div>
-          <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Photos</label>
-          <div className="flex flex-wrap gap-3 mb-3">
-            {images.map((url) => (
-              <div key={url} className="relative w-20 h-20 rounded overflow-hidden bg-surface">
-                <img src={url} alt="" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  className="absolute top-0 right-0 bg-coral text-coral-dark text-xs font-bold w-5 h-5 flex items-center justify-center"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
+        {error && (
+          <div className="bg-[#FCEBEB] text-[#791F1F] text-sm rounded-md px-4 py-2.5 mb-5 font-medium">
+            {error}
           </div>
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={handleImageUpload}
-            disabled={uploading}
-            className="text-sm text-muted"
-          />
-          {uploading && <p className="text-muted text-xs mt-1">Uploading...</p>}
+        )}
 
-          {images.length > 0 && (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="bg-white border border-[#E4E4EA] rounded-lg p-5 space-y-3 border-t-4 border-t-[#5B3DF5]">
+            <span className="inline-block bg-[#EDEBFF] text-[#5B3DF5] text-xs font-bold uppercase tracking-wide rounded px-2.5 py-1">
+              AI listing generator
+            </span>
+            <p className="text-[#6B6B76] text-xs">
+              Type a rough title + category below, optionally list key features, then generate polished copy.
+            </p>
+            <input
+              type="text"
+              value={keyFeatures}
+              onChange={(e) => setKeyFeatures(e.target.value)}
+              placeholder="Key features (optional, e.g. waterproof, 20hr battery)"
+              className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] text-sm px-3 py-2.5 outline-none focus:border-[#5B3DF5] transition"
+            />
             <button
               type="button"
-              onClick={generateCopyFromImage}
-              disabled={generatingFromImage}
-              className="bg-lime text-lime-dark font-display font-bold text-sm rounded px-4 py-2 hover:opacity-90 disabled:opacity-50 transition mt-3"
+              onClick={generateCopy}
+              disabled={generating}
+              className="bg-[#5B3DF5] hover:bg-[#4429D6] text-white font-display font-bold text-sm rounded-md px-4 py-2 disabled:opacity-50 transition"
             >
-              {generatingFromImage ? "Looking at photo..." : "Generate Title & Description from Photo"}
+              {generating ? "Generating..." : "Generate Title & Description"}
             </button>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Title</label>
-          <input
-            type="text"
-            value={form.title}
-            onChange={(e) => updateField("title", e.target.value)}
-            required
-            className="w-full rounded bg-surface border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Description</label>
-          <textarea
-            value={form.description}
-            onChange={(e) => updateField("description", e.target.value)}
-            required
-            rows={3}
-            className="w-full rounded bg-surface border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Price (₹)</label>
+            <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+              Photos
+            </label>
+            <div className="flex flex-wrap gap-3 mb-3">
+              {images.map((url) => (
+                <div key={url} className="relative w-20 h-20 rounded-md overflow-hidden bg-[#F5F4FA]">
+                  <img src={url} alt="" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(url)}
+                    className="absolute top-0 right-0 bg-[#C0392B] text-white text-xs font-bold w-5 h-5 flex items-center justify-center"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
             <input
-              type="number"
-              value={form.price}
-              onChange={(e) => updateField("price", e.target.value)}
-              required
-              min="0"
-              className="w-full rounded bg-surface border border-surface-light text-cream font-mono px-4 py-3 outline-none focus:border-coral transition"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleImageUpload}
+              disabled={uploading}
+              className="text-sm text-[#6B6B76]"
             />
-            {benchmark && (
-              <p className="text-muted text-xs mt-2 font-mono">
-                Similar: ₹{benchmark.min}–₹{benchmark.max} (avg ₹{benchmark.avg})
-              </p>
+            {uploading && <p className="text-[#6B6B76] text-xs mt-1">Uploading...</p>}
+
+            {images.length > 0 && (
+              <button
+                type="button"
+                onClick={generateCopyFromImage}
+                disabled={generatingFromImage}
+                className="bg-[#5B3DF5] hover:bg-[#4429D6] text-white font-display font-bold text-sm rounded-md px-4 py-2 disabled:opacity-50 transition mt-3"
+              >
+                {generatingFromImage ? "Looking at photo..." : "Generate Title & Description from Photo"}
+              </button>
             )}
           </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Stock</label>
-            <input
-              type="number"
-              value={form.stock}
-              onChange={(e) => updateField("stock", e.target.value)}
-              required
-              min="0"
-              className="w-full rounded bg-surface border border-surface-light text-cream font-mono px-4 py-3 outline-none focus:border-coral transition"
-            />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Category</label>
+            <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+              Title
+            </label>
             <input
               type="text"
-              value={form.category}
-              onChange={(e) => updateField("category", e.target.value)}
-              onBlur={fetchBenchmark}
+              value={form.title}
+              onChange={(e) => updateField("title", e.target.value)}
               required
-              className="w-full rounded bg-surface border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
+              className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] px-4 py-3 outline-none focus:border-[#5B3DF5] transition"
             />
           </div>
+
           <div>
-            <label className="block text-xs uppercase tracking-wider font-semibold text-muted mb-2">Sub-category</label>
-            <input
-              type="text"
-              value={form.subCategory}
-              onChange={(e) => updateField("subCategory", e.target.value)}
-              onBlur={fetchBenchmark}
-              className="w-full rounded bg-surface border border-surface-light text-cream px-4 py-3 outline-none focus:border-coral transition"
+            <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+              Description
+            </label>
+            <textarea
+              value={form.description}
+              onChange={(e) => updateField("description", e.target.value)}
+              required
+              rows={3}
+              className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] px-4 py-3 outline-none focus:border-[#5B3DF5] transition"
             />
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={autoTag}
-          disabled={tagging}
-          className="bg-surface border border-lime text-lime font-display font-bold text-sm rounded px-4 py-2 hover:bg-lime/10 disabled:opacity-50 transition"
-        >
-          {tagging ? "Tagging..." : "Auto-tag category from title/description"}
-        </button>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+                Price (₹)
+              </label>
+              <input
+                type="number"
+                value={form.price}
+                onChange={(e) => updateField("price", e.target.value)}
+                required
+                min="0"
+                className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] px-4 py-3 outline-none focus:border-[#5B3DF5] transition"
+              />
+              {benchmark && (
+                <p className="text-[#6B6B76] text-xs mt-2">
+                  Similar: ₹{benchmark.min}–₹{benchmark.max} (avg ₹{benchmark.avg})
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+                Stock
+              </label>
+              <input
+                type="number"
+                value={form.stock}
+                onChange={(e) => updateField("stock", e.target.value)}
+                required
+                min="0"
+                className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] px-4 py-3 outline-none focus:border-[#5B3DF5] transition"
+              />
+            </div>
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-coral text-coral-dark font-display font-bold rounded py-3.5 hover:opacity-90 disabled:opacity-50 transition"
-        >
-          {loading ? "Saving..." : isEditing ? "Save Changes" : "Create Listing"}
-        </button>
-      </form>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+                Category
+              </label>
+              <input
+                type="text"
+                value={form.category}
+                onChange={(e) => updateField("category", e.target.value)}
+                onBlur={fetchBenchmark}
+                required
+                className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] px-4 py-3 outline-none focus:border-[#5B3DF5] transition"
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wide font-semibold text-[#6B6B76] mb-2">
+                Sub-category
+              </label>
+              <input
+                type="text"
+                value={form.subCategory}
+                onChange={(e) => updateField("subCategory", e.target.value)}
+                onBlur={fetchBenchmark}
+                className="w-full rounded-md bg-white border border-[#E4E4EA] text-[#1A1A22] px-4 py-3 outline-none focus:border-[#5B3DF5] transition"
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={autoTag}
+            disabled={tagging}
+            className="bg-white border border-[#5B3DF5] text-[#5B3DF5] font-display font-bold text-sm rounded-md px-4 py-2 hover:bg-[#EDEBFF] disabled:opacity-50 transition"
+          >
+            {tagging ? "Tagging..." : "Auto-tag category from title/description"}
+          </button>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#FFA41C] hover:bg-[#E68A00] text-[#14161C] font-display font-bold rounded-md py-3.5 disabled:opacity-50 transition"
+          >
+            {loading ? "Saving..." : isEditing ? "Save Changes" : "Create Listing"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

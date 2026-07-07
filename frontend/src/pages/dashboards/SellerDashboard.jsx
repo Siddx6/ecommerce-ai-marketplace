@@ -20,67 +20,93 @@ function SellerDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p className="text-muted">Loading your dashboard...</p>;
+  if (loading) return <p className="text-[#6B6B76]">Loading your dashboard...</p>;
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
-        <div className="bg-surface rounded p-5">
-          <p className="text-muted text-xs uppercase tracking-wider font-semibold mb-2">Total Orders</p>
-          <p className="font-display text-2xl font-bold text-cream">{stats.totalOrders}</p>
+        <div className="bg-white border border-[#E4E4EA] rounded-lg p-5">
+          <p className="text-[#6B6B76] text-xs uppercase tracking-wide font-semibold mb-2">
+            Total Orders
+          </p>
+          <p className="font-display text-2xl font-bold text-[#1A1A22]">
+            {stats.totalOrders}
+          </p>
         </div>
-        <div className="bg-surface rounded p-5">
-          <p className="text-muted text-xs uppercase tracking-wider font-semibold mb-2">Units Sold</p>
-          <p className="font-display text-2xl font-bold text-cream">{stats.totalUnitsSold}</p>
+        <div className="bg-white border border-[#E4E4EA] rounded-lg p-5">
+          <p className="text-[#6B6B76] text-xs uppercase tracking-wide font-semibold mb-2">
+            Units Sold
+          </p>
+          <p className="font-display text-2xl font-bold text-[#1A1A22]">
+            {stats.totalUnitsSold}
+          </p>
         </div>
-        <div className="bg-surface rounded p-5">
-          <p className="text-muted text-xs uppercase tracking-wider font-semibold mb-2">Total Revenue</p>
-          <p className="font-mono text-2xl font-medium text-coral">₹{stats.totalRevenue}</p>
+        <div className="bg-white border border-[#E4E4EA] rounded-lg p-5">
+          <p className="text-[#6B6B76] text-xs uppercase tracking-wide font-semibold mb-2">
+            Total Revenue
+          </p>
+          <p className="font-display text-2xl font-bold text-[#5B3DF5]">
+            ₹{stats.totalRevenue}
+          </p>
         </div>
-        <div className="bg-surface rounded p-5">
-          <p className="text-muted text-xs uppercase tracking-wider font-semibold mb-2">Product Views</p>
-          <p className="font-display text-2xl font-bold text-cream">{stats.totalViews}</p>
+        <div className="bg-white border border-[#E4E4EA] rounded-lg p-5">
+          <p className="text-[#6B6B76] text-xs uppercase tracking-wide font-semibold mb-2">
+            Product Views
+          </p>
+          <p className="font-display text-2xl font-bold text-[#1A1A22]">
+            {stats.totalViews}
+          </p>
         </div>
-        <div className="bg-surface rounded p-5">
-          <p className="text-muted text-xs uppercase tracking-wider font-semibold mb-2">Conversion Rate</p>
-          <p className="font-display text-2xl font-bold text-lime">{stats.conversionRate}%</p>
+        <div className="bg-white border border-[#E4E4EA] rounded-lg p-5">
+          <p className="text-[#6B6B76] text-xs uppercase tracking-wide font-semibold mb-2">
+            Conversion Rate
+          </p>
+          <p className="font-display text-2xl font-bold text-[#1D9E75]">
+            {stats.conversionRate}%
+          </p>
         </div>
       </div>
 
       {summary && (
-        <div className="bg-surface rounded p-6 border-t-[3px] border-lime">
-          <span className="inline-block bg-lime text-lime-dark text-xs font-bold uppercase tracking-wider rounded px-2.5 py-1 mb-3">
+        <div className="bg-white border border-[#E4E4EA] rounded-lg p-6 border-t-4 border-t-[#5B3DF5]">
+          <span className="inline-block bg-[#EDEBFF] text-[#5B3DF5] text-xs font-bold uppercase tracking-wide rounded px-2.5 py-1 mb-3">
             AI insight
           </span>
-          <p className="text-cream text-sm leading-relaxed">{summary}</p>
+          <p className="text-[#1A1A22] text-sm leading-relaxed">{summary}</p>
         </div>
       )}
 
-      <div className="bg-surface rounded p-6">
-        <h2 className="font-display font-bold text-cream mb-4">Top Products</h2>
+      <div className="bg-white border border-[#E4E4EA] rounded-lg p-6">
+        <h2 className="font-display font-bold text-[#1A1A22] mb-4">Top Products</h2>
         {stats.topProducts.length === 0 ? (
-          <p className="text-muted text-sm">No sales yet.</p>
+          <p className="text-[#6B6B76] text-sm">No sales yet.</p>
         ) : (
           <ul className="space-y-2.5">
             {stats.topProducts.map((p, i) => (
               <li key={i} className="text-sm flex justify-between">
-                <span className="text-cream">{p.title} ({p.unitsSold} sold)</span>
-                <span className="font-mono text-coral">₹{p.revenue}</span>
+                <span className="text-[#1A1A22]">
+                  {p.title} ({p.unitsSold} sold)
+                </span>
+                <span className="text-[#5B3DF5] font-semibold">₹{p.revenue}</span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <div className="bg-surface rounded p-6">
-        <h2 className="font-display font-bold text-cream mb-4">Orders to Fulfill ({orders.length})</h2>
+      <div className="bg-white border border-[#E4E4EA] rounded-lg p-6">
+        <h2 className="font-display font-bold text-[#1A1A22] mb-4">
+          Orders to Fulfill ({orders.length})
+        </h2>
         {orders.length === 0 ? (
-          <p className="text-muted text-sm">No orders yet.</p>
+          <p className="text-[#6B6B76] text-sm">No orders yet.</p>
         ) : (
           <ul className="space-y-2.5">
             {orders.slice(0, 5).map((order) => (
-              <li key={order._id} className="text-cream text-sm">
-                {order.items.map((item) => `${item.title} x${item.quantity} (${item.status})`).join(", ")}
+              <li key={order._id} className="text-[#1A1A22] text-sm">
+                {order.items
+                  .map((item) => `${item.title} x${item.quantity} (${item.status})`)
+                  .join(", ")}
               </li>
             ))}
           </ul>
