@@ -130,7 +130,7 @@ export const getSellerAnalytics = async (req, res) => {
 export const getSellerAnalyticsSummary = async (req, res) => {
   try {
     const stats = await computeSellerStats(req.user.id);
-    const summary = await generateAnalyticsSummary(stats);
+    const summary = await generateAnalyticsSummary(stats, `seller:${req.user.id}`);
     res.status(200).json({ stats, summary });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -149,7 +149,7 @@ export const getAdminAnalytics = async (req, res) => {
 export const getAdminAnalyticsSummary = async (req, res) => {
   try {
     const stats = await computeAdminStats();
-    const summary = await generateAnalyticsSummary(stats);
+    const summary = await generateAnalyticsSummary(stats, "platform");
     res.status(200).json({ stats, summary });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

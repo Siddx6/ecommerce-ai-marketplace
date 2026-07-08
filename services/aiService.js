@@ -8,6 +8,21 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const summaryCache = new Map();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+function getCached(key) {
+  const entry = summaryCache.get(key);
+  if (entry && Date.now() - entry.timestamp < CACHE_TTL_MS) {
+    return entry.value;
+  }
+  return undefined;
+}
+
+function setCached(key, value) {
+  summaryCache.set(key, { value, timestamp: Date.now() });
+}
+
 export const generateProductCopyFromImageFile = async (filename, category) => {
   const filePath = path.join(__dirname, "..", "uploads", filename);
   const imageBytes = fs.readFileSync(filePath);
@@ -268,9 +283,14 @@ Keep each phrase under 8 words. Maximum 4 pros and 4 cons. Only include cons if 
   }
 };
 
-export const generateWishlistNudge = async (wishlistItems) => {
+export const generateWishlistNudge = async (wishlistItems, cacheKey) => {
   if (!wishlistItems || wishlistItems.length === 0) {
     return null;
+  }
+
+  if (cacheKey) {
+    const cached = getCached(`nudge:${cacheKey}`);
+    if (cached !== undefined) return cached;
   }
 
   const itemsText = wishlistItems
@@ -300,6 +320,7 @@ Return ONLY the message text, no quotes, no JSON, no explanation.`;
 
     const data = await response.json();
     const message = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+    if (cacheKey) setCached(`nudge:${cacheKey}`, message);
     return message;
   } catch (err) {
     console.log("Wishlist nudge generation failed:", err.message);
@@ -307,7 +328,12 @@ Return ONLY the message text, no quotes, no JSON, no explanation.`;
   }
 };
 
-export const generateAnalyticsSummary = async (stats) => {
+export const generateAnalyticsSummary = async (stats, cacheKey) => {
+  if (cacheKey) {
+    const cached = getCached(`analytics:${cacheKey}`);
+    if (cached !== undefined) return cached;
+  }
+
   const prompt = `All monetary values below are in Indian Rupees (INR). Always write them with a ₹ prefix (e.g. ₹2499), never $ or any other currency symbol.
 
 Here is raw analytics data for an eCommerce platform/seller:
@@ -333,6 +359,7 @@ Return ONLY the summary text, no markdown, no JSON, no explanation.`;
 
     const data = await response.json();
     const summary = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+    if (cacheKey) setCached(`analytics:${cacheKey}`, summary);
     return summary;
   } catch (err) {
     console.log("Analytics summary generation failed:", err.message);

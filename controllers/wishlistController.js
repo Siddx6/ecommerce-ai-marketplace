@@ -85,7 +85,7 @@ export const getWishlistNudge = async (req, res) => {
       .map((item) => item.product)
       .filter((product) => product && product.isActive);
 
-    const nudge = await generateWishlistNudge(activeItems);
+    const nudge = await generateWishlistNudge(activeItems, req.user.id);
     res.status(200).json({ nudge });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
